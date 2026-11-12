@@ -1,0 +1,214 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where([data-theme="dark"], [data-theme="dark"] *));
+
+:root,
+[data-theme="dark"] {
+  color-scheme: dark;
+  --page: #10130b; /* page background */
+  --raised: #1b2112; /* cards, panels */
+  --ink: #f1f4e4; /* main text */
+  --muted: #a7b192; /* secondary text */
+  --line: #f1f4e4; /* pixel outlines */
+  --accent: #bfe02a; /* lime highlights + buttons */
+  --accent-ink: #10130b; /* text on top of accent */
+  --hilite: #bfe02a; /* accent-coloured TEXT (needs contrast with the page) */
+  --dot: rgb(191 224 42 / 0.1); /* background dot grid */
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --page: #f7f8ef;
+  --raised: #ffffff;
+  --ink: #141a0c;
+  --muted: #566040;
+  --line: #141a0c;
+  --accent: #a6c416;
+  --accent-ink: #141a0c;
+  --hilite: #4c6200;
+  --dot: rgb(20 26 12 / 0.09);
+}
+
+:root {
+  /* The green "band" sections (header, about, contact) look the same in both modes. */
+  --band: #a6c416;
+  --band-ink: #10130b;
+  --band-muted: #36420f;
+  --slab: #141a0c; /* dark blocks sitting on the band */
+  --slab-ink: #f1f4e4;
+}
+
+@theme inline {
+  --color-page: var(--page);
+  --color-raised: var(--raised);
+  --color-ink: var(--ink);
+  --color-muted: var(--muted);
+  --color-line: var(--line);
+  --color-accent: var(--accent);
+  --color-accent-ink: var(--accent-ink);
+  --color-hilite: var(--hilite);
+  --color-band: var(--band);
+  --color-band-ink: var(--band-ink);
+  --color-band-muted: var(--band-muted);
+  --color-slab: var(--slab);
+  --color-slab-ink: var(--slab-ink);
+
+  --font-pixel: var(--font-pixel-face), "Courier New", monospace;
+  --font-mono: var(--font-jetbrains), ui-monospace, "Courier New", monospace;
+}
+
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: 5.5rem; /* keeps section titles clear of the sticky header */
+}
+
+body {
+  background: var(--page);
+  color: var(--ink);
+  font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+
+.on-band :focus-visible {
+  outline-color: var(--band-ink);
+}
+
+.pixel-box,
+.pixel-outline {
+  --px-line: var(--line);
+  box-shadow:
+    0 -4px 0 0 var(--px-line),
+    0 4px 0 0 var(--px-line),
+    -4px 0 0 0 var(--px-line),
+    4px 0 0 0 var(--px-line);
+}
+
+.pixel-box {
+  margin: 4px;
+}
+
+.on-band .pixel-box,
+.on-band .pixel-outline {
+  --px-line: var(--band-ink);
+}
+
+/* Chunky game button: notched outline + shaded bottom/right edge that flips when pressed. */
+.pixel-btn {
+  --px-line: var(--line);
+  --px-shade: rgb(0 0 0 / 0.28);
+  margin: 4px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6rem;
+  min-height: 44px; /* comfortable touch target */
+  padding: 0.55rem 1rem;
+  background: var(--accent);
+  color: var(--accent-ink);
+  font-weight: 700;
+  line-height: 1.1;
+  cursor: pointer;
+  box-shadow:
+    0 -4px 0 0 var(--px-line),
+    0 4px 0 0 var(--px-line),
+    -4px 0 0 0 var(--px-line),
+    4px 0 0 0 var(--px-line),
+    inset -4px -4px 0 0 var(--px-shade);
+  transition: filter 80ms steps(2);
+}
+
+.pixel-btn:hover {
+  filter: brightness(1.1);
+}
+
+.pixel-btn:active {
+  box-shadow:
+    0 -4px 0 0 var(--px-line),
+    0 4px 0 0 var(--px-line),
+    -4px 0 0 0 var(--px-line),
+    4px 0 0 0 var(--px-line),
+    inset 4px 4px 0 0 var(--px-shade);
+}
+
+.on-band .pixel-btn {
+  --px-line: var(--band-ink);
+  background: var(--slab);
+  color: var(--slab-ink);
+  --px-shade: rgb(255 255 255 / 0.16);
+}
+
+.on-band .pixel-btn:hover {
+  filter: none;
+  background: #26301a;
+}
+
+.dot-grid {
+  background-image: radial-gradient(var(--dot) 1.5px, transparent 1.5px);
+  background-size: 16px 16px;
+}
+
+/* Text shadow that makes big pixel titles look extruded. */
+.pixel-title {
+  text-shadow: 0.06em 0.06em 0 var(--accent);
+}
+
+[data-theme="light"] .pixel-title {
+  text-shadow: 0.06em 0.06em 0 var(--band);
+}
+
+@keyframes blink {
+  50% {
+    opacity: 0;
+  }
+}
+
+@keyframes twinkle {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.25;
+    transform: scale(0.6);
+  }
+}
+
+@keyframes bob {
+  50% {
+    transform: translateY(4px);
+  }
+}
+
+.blink {
+  animation: blink 1.1s steps(1) infinite;
+}
+
+.twinkle {
+  animation: twinkle 2.4s steps(4) infinite;
+}
+
+.bob {
+  animation: bob 1s steps(2) infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .blink,
+  .twinkle,
+  .bob {
+    animation: none;
+  }
+}
